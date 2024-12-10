@@ -3,7 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonFab, IonFabButton, IonIcon, IonFabList, IonCard, IonCardTitle, IonCardHeader, IonCardSubtitle, IonCardContent, IonItem, IonList, IonButton, IonItemSliding, IonAvatar, IonLabel, IonItemOptions, IonItemOption } from '@ionic/angular/standalone';
+import { CapacitorHttp, HttpResponse } from '@capacitor/core';
+import { addOutline, chevronBackCircleOutline, chevronDown, chevronDownCircle, chevronDownOutline, chevronDownSharp, documentOutline, documentSharp, document, addCircle, addCircleOutline, addCircleSharp, add, addSharp, trash, trashOutline, trashSharp, reload, reloadOutline, reloadSharp } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { RouterLink } from '@angular/router';
+import { environment } from 'src/environments/environment'
 
 
 @Component({
@@ -11,181 +16,57 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton 
   templateUrl: './encuesta.page.html',
   styleUrls: ['./encuesta.page.scss'],
   standalone: true,
-  imports: [IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,ReactiveFormsModule, IonMenuButton]
+  imports: [IonItemOption, IonItemOptions, IonLabel, IonAvatar, IonItemSliding, IonButton, IonList, IonItem, IonCardContent, IonCardSubtitle, IonCardHeader, IonCardTitle, IonCard, IonFabList, IonIcon, IonFabButton, IonFab, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,ReactiveFormsModule, IonMenuButton, RouterLink]
 })
 export class EncuestaPage implements OnInit {
+
+  public encuesta: any = [];
+  public idsEncuesta: String = '';
+  public selectEncuesta: any = {};
+
+  private enviroment = environment;
   
-  form: FormGroup | any
+ 
 
-  constructor (
-    private fb: FormBuilder
-  ) {}
-
-  ngOnInit() {
-    this.setForm()
+  constructor () {
+    addIcons({ addOutline, chevronDown, chevronDownOutline, chevronDownSharp, chevronBackCircleOutline, chevronDownCircle, documentOutline, documentSharp, document, addCircle, addCircleOutline, addCircleSharp, add, addSharp, trash, trashOutline, trashSharp, reload, reloadOutline, reloadSharp});
   }
 
-  setForm() {
-    this.form = this.fb.group({
-      title: [null, [Validators.required]],
-      description: [null, [Validators.required]],
-      questions: this.fb.array([])
-    })
+  async ngOnInit() {
+    const options = {
+      url: this.enviroment.apiUrl + 'encuestas',
+      headers: { 'Content-Type': 'application/json' }
+    };
+  
+      const response: HttpResponse = await CapacitorHttp.get(options);
+      this.encuesta = response.data;
+      this.selectEncuesta = this.encuesta;
+    
   }
 
-  async create() {
-    this.form.markAllAsTouched()
-
-    if (this.form.invalid) {
-      return alert('Ingresa los datos como se indica.')
-    }
-
-    alert('Encuesta creada exitosamente.')
-
-    console.log('Data', this.form.value)
-
-    this.setForm()
+  onSelectEncuesta(encuesta: any){
+    this.selectEncuesta = encuesta;
   }
 
-  addQuestion() {
-    const questions: FormArray = this.form.get('questions') as FormArray
-
-    questions.push(this.fb.group({
-      title: [null, [Validators.required]],
-      type: [1, [Validators.required]],
-      options: this.fb.array([])
-    }))
-
-    const question: FormGroup = questions.controls[(questions.length - 1)] as FormGroup
-
-    question.get('type')?.valueChanges.subscribe(type => {
-      const options: FormArray = question.get('options') as FormArray
-
-      while (options.length !== 0) {
-        options.removeAt(0)
-      }
-
-      switch (type) {
-        case '2':
-          options.push(this.fb.group({
-            title: [null, [Validators.required]]
-          }))
-
-          question.get('options')?.setValidators([Validators.required])
-          question.get('options')?.updateValueAndValidity()
-          break
-
-        case '3':
-          options.push(this.fb.group({
-            title: 1
-          }))
-          
-          options.push(this.fb.group({
-            title: 2
-          }))
-          
-          options.push(this.fb.group({
-            title: 3
-          }))
-          
-          options.push(this.fb.group({
-            title: 4
-          }))
-          
-          options.push(this.fb.group({
-            title: 5
-          }))
-          
-          options.push(this.fb.group({
-            title: 6
-          }))
-          
-          options.push(this.fb.group({
-            title: 7
-          }))
-          
-          options.push(this.fb.group({
-            title: 8
-          }))
-          
-          options.push(this.fb.group({
-            title: 9
-          }))
-          
-          options.push(this.fb.group({
-            title: 10
-          }))
-
-          question.get('options')?.setValidators([Validators.required])
-          question.get('options')?.updateValueAndValidity()
-          break
-
-        case '4':
-          options.push(this.fb.group({
-            title: 1
-          }))
-          
-          options.push(this.fb.group({
-            title: 2
-          }))
-          
-          options.push(this.fb.group({
-            title: 3
-          }))
-          
-          options.push(this.fb.group({
-            title: 4
-          }))
-          
-          options.push(this.fb.group({
-            title: 5
-          }))
-
-          question.get('options')?.setValidators([Validators.required])
-          question.get('options')?.updateValueAndValidity()
-          break
-
-        case '5':
-          options.push(this.fb.group({
-            title: 'Si'
-          }))
-          
-          options.push(this.fb.group({
-            title: 'No'
-          }))
-
-          question.get('options')?.setValidators([Validators.required])
-          question.get('options')?.updateValueAndValidity()
-          break
-
-        default:
-          question.get('options')?.clearValidators()
-          question.get('options')?.updateValueAndValidity()
-          break
-      }
-    })
+  onDeleteEncuesta(){
+    this.selectEncuesta = {};
   }
 
-  removeQuestion(qI: number) {
-    const questions: FormArray = this.form.get('questions') as FormArray
+  async deleteEncuesta(encuesta: any){
+    this.idsEncuesta = encuesta.id;
+    console.log("el id selecionado es " + this.idsEncuesta);
 
-    questions.removeAt(qI)
+
+    const options = {
+      url: this.enviroment.apiUrl + 'encuesta/' + this.idsEncuesta,
+      headers: { 'Content-Type': 'application/json' },
+      data: this.idsEncuesta
+    };
+  
+    const response: HttpResponse = await CapacitorHttp.delete(options);
+
+    window.location.reload();
   }
 
-  addOption(qI: number) {
-    const questions: FormArray = this.form.get('questions') as FormArray
-    const options: FormArray = questions.controls[qI].get('options') as FormArray
-
-    options.push(this.fb.group({
-      title: [null, [Validators.required]]
-    }))
-  }
-
-  removeOption(qI: number, oI: number) {
-    const questions: FormArray = this.form.get('questions') as FormArray
-    const options: FormArray = questions.controls[qI].get('options') as FormArray
-
-    options.removeAt(oI)
-  }
-
+  
 }

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, Validator, FormBuilder,
 ReactiveFormsModule,  FormsModule, Validators} from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonInput, IonButtons, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonFooter, IonItem, IonButton, IonLabel, IonText, IonInputPasswordToggle, IonMenuButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonInput, IonButtons, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonFooter, IonItem, IonButton, IonLabel, IonText, IonInputPasswordToggle, IonMenuButton, IonList, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import { CapacitorHttp, HttpResponse } from '@capacitor/core';
 import { environment } from 'src/environments/environment';
+import { RouterLink } from '@angular/router';
 
 
 
@@ -13,26 +14,19 @@ import { environment } from 'src/environments/environment';
   templateUrl: './registrar.page.html',
   styleUrls: ['./registrar.page.scss'],
   standalone: true,
-  imports: [IonText, IonFooter, IonCardContent, IonCardTitle, IonCardHeader, IonCard, IonButtons, IonLabel, IonItem, IonInput, IonButton, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule, IonInputPasswordToggle, IonMenuButton]
+  imports: [IonList, IonText, IonFooter, IonCardContent, IonCardTitle, IonCardHeader, IonCard, IonButtons, IonLabel, IonItem, IonInput, IonButton, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule, IonInputPasswordToggle, IonMenuButton, IonSelect, IonSelectOption, RouterLink]
 })
 export class RegistrarPage implements OnInit {
   
   private enviroment = environment; 
 
-  public user: any = [];
+  public user:  {'cedula': String, 'nombre': String, 'apellido': String, 'estado': String, 'email': String, 'password': String} ={'cedula': "", 'nombre': '', 'apellido': '', 'estado': '', 'email': '', 'password': ''};
 
-  usuarioForm: FormGroup;
+  
 
-  constructor(private formBuilder: FormBuilder) { 
+  constructor() { 
 
-    this.usuarioForm = this.formBuilder.group({
-      cedula: ['', Validators.required],
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      estado: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
-    });
+    
 
   }
 
@@ -44,18 +38,24 @@ export class RegistrarPage implements OnInit {
   
     const response: HttpResponse = await CapacitorHttp.post(options);
     
-    console.log("Hola luis formulario"+ this.usuarioForm);
+    
 
-    //response.data = this.user;
+    
    
   }
 
-  onSubmit() {
-    if (this.usuarioForm.valid) {
-      console.log('Formulario válido:', this.usuarioForm.value);
-    } else {
-      console.log('Formulario inválido');
-    }
+  async onSave() {
+    console.log(this.user);
+
+    const options = {
+      url: this.enviroment.apiUrl + 'create',
+      headers: { 'Content-Type': 'application/json' },
+      data: this.user
+    };
+  
+    const response: HttpResponse = await CapacitorHttp.post(options);
+
+    window.location.reload();
   }
 
 }

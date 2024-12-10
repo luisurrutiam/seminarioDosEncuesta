@@ -17,12 +17,13 @@ export class AppComponent {
     { title: 'Inicio', url: '/login', icon: 'log-in' },
     { title: 'Home', url: '/home', icon: 'home' },
     { title: 'Usuarios', url: '/listausuarios', icon: 'people' },
-    { title: 'Registrar Usuario', url: '/registrarUsuario', icon: 'person-add' },
+    { title: 'Institucion', url: '/institucion', icon: 'school' },
+    { title: 'Encuesta', url: '/encuesta', icon: 'book' },
+    { title: 'Preguntas', url: '/crearpregunta', icon: 'help-circle' },
     { title: 'Privilegios', url: '/privilegios', icon: 'star-half' },
     { title: 'Perfil', url: '/perfil', icon: 'id-card' },
-    { title: 'Crear Encuesta', url: '/encuesta', icon: 'book' },
-    { title: 'Crear Preguntas', url: '/crearpregunta', icon: 'help-circle' },
-    { title: 'Institucion', url: '/institucion', icon: 'school' },
+  
+   
     
   ];
   
